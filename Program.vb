@@ -29,27 +29,39 @@
         
         'menu algorithm
         Dim arrayToVisualise(-1) As String
-        For i = 0 To 39
+        For i = 0 To 60 -1
             Array.Resize(arrayToVisualise, arrayToVisualise.Length+1)
-            arrayToVisualise(i) = "this is entry number " & i & "."
+            arrayToVisualise(i) = "this is entry number " & i & ". " & vbTab
         Next
         
         Dim selections As String = ""
         Dim columns As Integer = 1
-        If Console.WindowWidth > 100 Then columns = 2
-        For i = 1 To Convert.ToInt32(arrayToVisualise.Length / columns) ' i is number of lines
-            For j = 1 To columns ' j is current column
-                If j = 1 Then
-                    selections = arrayToVisualise(i - 1) & headerSpacing
-                Else
-                    
-                    selections &= arrayToVisualise( Convert.ToInt32(arrayToVisualise.Length /j) +i-1) '& vbNewLine
-                End If
+        If Console.WindowWidth > 100 Then columns = 7
+        If arrayToVisualise.Length Mod columns = 0 Then
+            For i = 1 To Convert.ToInt32(arrayToVisualise.Length / columns) ' i is number of lines
+                For j = 1 To columns ' j is current column
+                    selections &= arrayToVisualise( Convert.ToInt32(arrayToVisualise.Length / columns * (j-1) ) +i-1)
+                    If j = columns Then selections &= vbNewLine
+                Next
+                'Console.WriteLine(selections)
             Next
-            Console.WriteLine(selections)
-        Next
-        'Console.WriteLine(selections)
-        
+        Else
+            For i = 1 To Convert.ToInt32(arrayToVisualise.Length / columns) +1 ' i is number of lines
+                For j = 1 To columns ' j is current column
+                    If j = 1 Then
+                        selections &= arrayToVisualise(i-1)
+                    Else
+                        Try
+                            selections &= arrayToVisualise( Convert.ToInt32(arrayToVisualise.Length / columns * (j-1) ) +i +j +(j/2) -2)
+                        Catch
+                        End Try
+                    End If
+                    If j = columns Then selections &= vbNewLine
+                Next
+                'Console.WriteLine(selections)
+            Next
+        End If
+        Console.WriteLine(selections)
     End Sub
     
     Sub Download(URL As String, Optional OutputFile As String = Nothing)
