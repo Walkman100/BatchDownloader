@@ -38,25 +38,30 @@
         Next i
         Console.WriteLine(HR)
         
-        CalcSpacingAndOutput(My.Application.Info.AssemblyName & " v" & My.Application.Info.Version.ToString)
+        CalcSpacingAndOutput(My.Application.Info.AssemblyName & " v" & My.Application.Info.Version.ToString & " by Walkman100")
+        CalcSpacingAndOutput("https://github.com/Walkman100/BatchDownloader", False)
         Console.WriteLine(HR)
         
         CalcSpacingAndOutput("Startup Path: " & My.Application.Info.DirectoryPath, False)
         CalcSpacingAndOutput("Current Directory: " & Environment.CurrentDirectory)
-        
+        CalcSpacingAndOutput("Current Encoding: " & Console.OutputEncoding.ToString)
+        CalcSpacingAndOutput("Window Position: top:" & Console.WindowTop & " left:" & Console.WindowLeft, False)
+        CalcSpacingAndOutput("Window Size: width:" & Console.WindowWidth & " height:" & Console.WindowHeight)
+        CalcSpacingAndOutput("Buffer Size: width:" & Console.BufferWidth & " height:" & Console.BufferHeight, False)
+        CalcSpacingAndOutput("Cursor: top:" & Console.CursorTop & " left:" & Console.CursorLeft & " size:" & Console.CursorSize & " visible:" & Console.CursorVisible)
         
         Console.WriteLine(HR)
         
         'menu algorithm
-        Dim arrayToVisualise(-1) As String
-        For i = 0 To 60 -1
-            Array.Resize(arrayToVisualise, arrayToVisualise.Length+1)
-            arrayToVisualise(i) = "this is entry number " & i & ". " & vbTab
-        Next
+        Dim arrayToVisualise() As String = {"[CD] Change Current Directory" & vbTab & vbTab, "[GV] Get an Environment variable" & vbTab, "[EV] Set an Environment variable" & vbTab,
+            "[ST] Set the window title" & vbTab & vbTab, "[EC] Set the encoding used" & vbTab & vbTab, "[CR] Set cursor options" & vbTab & vbTab & vbTab,
+            "[WP] Set the window position" & vbTab & vbTab, "[WS] Set the window size" & vbTab & vbTab, "[BS] Set the buffer size" & vbTab & vbTab,
+            "Download Settings:" & vbTab & vbTab & vbTab & vbTab, "[UF] Set a file to read URLs from" & vbTab & vbTab, "[NF] Set a file to read filenames from" & vbTab & vbTab,
+            "[NP] Set a name Prefix to use" & vbTab, "[NS] Set a name Suffix to use" & vbTab, "[EXIT, Q, D] Exit" & vbTab}
         
         Dim selections As String = ""
         Dim columns As Integer = 1
-        If Console.WindowWidth > 100 Then columns = 7
+        columns = Console.WindowWidth \ 40
         If arrayToVisualise.Length Mod columns = 0 Then
             For i = 1 To arrayToVisualise.Length \ columns ' i is number of lines
                 For j = 1 To columns ' j is current column
