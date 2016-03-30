@@ -38,31 +38,54 @@
         Dim columns As Integer = 1
         If Console.WindowWidth > 100 Then columns = 7
         If arrayToVisualise.Length Mod columns = 0 Then
-            For i = 1 To Convert.ToInt32(arrayToVisualise.Length / columns) ' i is number of lines
+            For i = 1 To arrayToVisualise.Length \ columns ' i is number of lines
                 For j = 1 To columns ' j is current column
-                    selections &= arrayToVisualise( Convert.ToInt32(arrayToVisualise.Length / columns * (j-1) ) +i-1)
+                    selections &= arrayToVisualise( (arrayToVisualise.Length \ columns) * (j-1) +i -1)
                     If j = columns Then selections &= vbNewLine
                 Next
-                'Console.WriteLine(selections)
             Next
         Else
-            For i = 1 To Convert.ToInt32(arrayToVisualise.Length / columns) +1 ' i is number of lines
+            For i = 1 To arrayToVisualise.Length \ columns +1 ' i is number of lines
                 For j = 1 To columns ' j is current column
-                    If j = 1 Then
-                        selections &= arrayToVisualise(i-1)
-                    Else
-                        Try
-                            selections &= arrayToVisualise( Convert.ToInt32(arrayToVisualise.Length / columns * (j-1) ) +i +j +(j/2) -2)
-                        Catch
-                        End Try
-                    End If
+                    Try
+                        selections &= arrayToVisualise( (arrayToVisualise.Length \ columns +1) * (j-1) +i -1)
+                    Catch
+                    End Try
                     If j = columns Then selections &= vbNewLine
                 Next
-                'Console.WriteLine(selections)
             Next
         End If
         Console.WriteLine(selections)
     End Sub
+    
+    #Region "Menu Algorithm Explanation"
+'		j
+'1	2	3	4	5 (`columns`)
+'2
+'3
+'4
+'5
+'6
+'7
+'
+'i
+'
+'array(i-1)
+'array.length = how many there are
+'
+'for i = 1 to length \ columns [amount in each column]
+'    for j = 1 to columns
+'        add array( (length \ columns [amount in each column] * j-1 [get current tens amount]) +i [current count] -1 [to get index])
+'    next
+'next
+'
+'
+'for i = 1 to length \ columns +1 [amount in each column, one more for unevenness]
+'    for j = 1 to columns
+'        add array( (length \ columns +1 [see above] * j-1 [get current tens amount]) +i [current count] -1 [to get index])
+'    next
+'next
+#End Region
     
     Sub Download(URL As String, Optional OutputFile As String = Nothing)
         If OutputFile <> Nothing Then
