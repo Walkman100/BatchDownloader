@@ -1,19 +1,32 @@
 ﻿Module Program
     Sub Main()
         Do Until False
-            ShowMenu
+            ShowMenu()
             Console.Write("Enter choice: ")
             Dim answer = Console.ReadLine
             Select Case answer.ToLower
-                Case "exit", "q", "d", "", "♦" ' apparently that's ^D
-                    Exit Sub
+                Case ""
+                Case "exit", "q", "d", "♦" ' apparently that's ^D
+                    Exit Do
                 Case Else
                     Console.WriteLine("Unknown entry " & answer & "!")
+                    Console.Write("Press any key to continue . . . ")
+                    Console.ReadKey(True)
             End Select
-            
-            Console.Write("Press any key to continue . . . ")
-            Console.ReadKey(True)
         Loop
+    End Sub
+    
+    
+    Sub CalcSpacingAndOutput(centerText As String, Optional normal As Boolean = True)
+        Dim spacing As String = ""
+        For i = 0 To (Console.WindowWidth - centerText.Length)\2 -4
+            spacing &= " "
+        Next
+        If normal Then
+            Console.WriteLine("##" & spacing & " " & centerText & IIf(Console.WindowWidth Mod 2 = 0, "", " ").ToString & spacing & "##")
+        Else
+            Console.WriteLine("##" & spacing & " " & centerText & IIf(Console.WindowWidth Mod 2 = 0, " ", "").ToString & spacing & "##")
+        End If
     End Sub
     
     Sub ShowMenu()
@@ -25,16 +38,12 @@
         Next i
         Console.WriteLine(HR)
         
-        Dim headerText = My.Application.Info.AssemblyName & " v" & My.Application.Info.Version.ToString
-        Dim headerSpacing As String = ""
-        For i = 0 To (Console.WindowWidth - headerText.Length)\2 -4
-            headerSpacing &= " "
-        Next
+        CalcSpacingAndOutput(My.Application.Info.AssemblyName & " v" & My.Application.Info.Version.ToString)
+        Console.WriteLine(HR)
         
-        Dim header = "##" & headerSpacing & " " & headerText
-        If Console.WindowWidth Mod 2 <> 0 Then header &= " " ' check if odd width
-        header &= headerSpacing & "##"
-        Console.WriteLine(header)
+        CalcSpacingAndOutput("Startup Path: " & My.Application.Info.DirectoryPath, False)
+        CalcSpacingAndOutput("Current Directory: " & Environment.CurrentDirectory)
+        
         
         Console.WriteLine(HR)
         
