@@ -1,21 +1,159 @@
 ﻿Module Program
+    Dim urlFilePath, filenameFilePath, namePrefix, nameSuffix As String
+    
     Sub Main()
+        Console.Title = My.Application.Info.AssemblyName & " v" & My.Application.Info.Version.ToString
+        
         Do Until False
             ShowMenu()
             Console.Write("Enter choice: ")
             Dim answer = Console.ReadLine
             Select Case answer.ToLower
+                Case "cd" ' Change Current Directory
+                    Console.Write("Enter path to change to: ")
+                    Environment.CurrentDirectory = Console.ReadLine
+                    Console.Write("Current directory changed to " & Environment.CurrentDirectory & ". ")
+                    Pause
+                Case "gv" ' Get an Environment variable
+                    Console.Write("Enter environment variable to get: ")
+                    answer = Console.ReadLine
+                    Console.Write("Contents of environment variable """ & answer & """ is """ & Environment.GetEnvironmentVariable(answer) & """. ")
+                    Pause
+                Case "ev" ' Set an Environment variable
+                    Console.Write("Enter environment variable to set: ")
+                    answer = Console.ReadLine
+                    Console.Writeline("Current contents: """ & Environment.GetEnvironmentVariable(answer) & """. Enter new contents:")
+                    Environment.SetEnvironmentVariable(answer, Console.ReadLine)
+                    Console.Write("Environment variable """ & answer & """ set to """ & Environment.GetEnvironmentVariable(answer) & """. ")
+                    Pause
+                Case "st" ' Set the window title
+                    Console.Write("Enter new title: ")
+                    Console.Title = Console.ReadLine
+                Case "ec" ' Set the encoding used
+'                    Console.Write("Enter environment variable to get: ")
+'                    answer = Console.ReadLine
+'                    Console.Write("Contents of environment variable """ & answer & """ is """ & Environment.GetEnvironmentVariable(answer) & """. Press any key to continue... ")
+'                    Console.ReadKey(True)
+                Case "cr" ' Set cursor options
+'                    Console.Write("Enter environment variable to get: ")
+'                    answer = Console.ReadLine
+'                    Console.Write("Contents of environment variable """ & answer & """ is """ & Environment.GetEnvironmentVariable(answer) & """. Press any key to continue... ")
+'                    Console.ReadKey(True)
+                Case "wp" ' Set the window position
+                    Console.Write("Enter new window top position: ")
+                    answer = Console.ReadLine
+                    Try
+                        Console.WindowTop = Convert.ToInt32(answer)
+                    Catch ex As Exception
+                        Console.Writeline(ex.ToString)
+                    End Try
+                    Console.Write("Enter new window left position: ")
+                    answer = Console.ReadLine
+                    Try
+                        Console.WindowLeft = Convert.ToInt32(answer)
+                    Catch ex As Exception
+                        Console.Writeline(ex.ToString)
+                        Pause
+                    End Try
+                Case "ws" ' Set the window size
+                    Console.Write("Enter new window width: ")
+                    answer = Console.ReadLine
+                    Try
+                        Console.WindowWidth = Convert.ToInt32(answer)
+                    Catch ex As Exception
+                        Console.Writeline(ex.ToString)
+                    End Try
+                    Console.Write("Enter new window height: ")
+                    answer = Console.ReadLine
+                    Try
+                        Console.WindowHeight = Convert.ToInt32(answer)
+                    Catch ex As Exception
+                        Console.Writeline(ex.ToString)
+                        Pause
+                    End Try
+                Case "bs" ' Set the buffer size
+                    Console.Write("Enter new buffer width: ")
+                    answer = Console.ReadLine
+                    Try
+                        Console.BufferWidth = Convert.ToInt32(answer)
+                    Catch ex As Exception
+                        Console.Writeline(ex.ToString)
+                    End Try
+                    Console.Write("Enter new buffer height: ")
+                    answer = Console.ReadLine
+                    Try
+                        Console.BufferHeight = Convert.ToInt32(answer)
+                    Catch ex As Exception
+                        Console.Writeline(ex.ToString)
+                        Pause
+                    End Try
+                Case "uf" ' Set a file to read URLs from
+                    If urlFilePath <> "" Then
+                        Console.Writeline("Currently reading from: """ & urlFilePath & """.")
+                    End If
+                    Console.Write("Enter file path to read URLs to download from: ")
+                    answer = Console.ReadLine
+                    If IO.File.Exists(answer) Then
+                        urlFilePath = answer
+                        Console.Write("Reading URLs from """ & urlFilePath & """. ")
+                    Else
+                        Console.Write("File """ & answer & """ doesn't exist! ")
+                    End If
+                    Pause
+                Case "nf" ' Set a file to read filenames from
+                    If filenameFilePath <> "" Then
+                        Console.Writeline("Currently reading from: """ & filenameFilePath & """.")
+                    End If
+                    Console.Write("Enter file path to read filenames to download to: ")
+                    answer = Console.ReadLine
+                    If IO.File.Exists(answer) Then
+                        filenameFilePath = answer
+                        Console.Write("Reading filenames from """ & filenameFilePath & """. ")
+                    Else
+                        Console.Write("File """ & answer & """ doesn't exist! ")
+                    End If
+                    Pause
+                Case "np" ' Set a name Prefix to use
+                    If namePrefix <> "" Then
+                        Console.Writeline("Currently reading from: """ & namePrefix & """.")
+                    End If
+                    Console.Write("Enter text to prepend to filenames (use {0} to specify the current number file): ")
+                    answer = Console.ReadLine
+                    If answer <> "" Then
+                        namePrefix = answer
+                        Console.Write("Filename prefix set to """ & namePrefix & """. ")
+                    Else
+                        Console.Write("Filename prefix not changed! ")
+                    End If
+                    Pause
+                Case "ns" ' Set a name Suffix to use
+                    If nameSuffix <> "" Then
+                        Console.Writeline("Currently reading from: """ & nameSuffix & """.")
+                    End If
+                    Console.Write("Enter text to append to filenames (use {0} to specify the current number file): ")
+                    answer = Console.ReadLine
+                    If answer <> "" Then
+                        nameSuffix = answer
+                        Console.Write("Filename prefix set to """ & nameSuffix & """. ")
+                    Else
+                        Console.Write("Filename prefix not changed! ")
+                    End If
+                    Pause
                 Case ""
                 Case "exit", "q", "d", "♦" ' apparently that's ^D
                     Exit Do
                 Case Else
                     Console.WriteLine("Unknown entry " & answer & "!")
-                    Console.Write("Press any key to continue . . . ")
-                    Console.ReadKey(True)
+                    Pause
             End Select
         Loop
     End Sub
     
+    Sub Pause() 'mimicing cmd
+        Console.Write("Press any key to continue . . . ")
+        Console.ReadKey(True)
+        Console.WriteLine()
+    End Sub
     
     Sub CalcSpacingAndOutput(centerText As String, Optional normal As Boolean = True)
         Dim spacing As String = ""
