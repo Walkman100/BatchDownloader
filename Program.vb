@@ -1,12 +1,23 @@
 ﻿Module Program
     Sub Main()
-        ShowMenu
-        
-        Console.Write("Press any key to continue . . . ")
-        Console.ReadKey(True)
+        Do Until False
+            ShowMenu
+            Console.Write("Enter choice: ")
+            Dim answer = Console.ReadLine
+            Select Case answer.ToLower
+                Case "exit", "q", "d", "", "♦" ' apparently that's ^D
+                    Exit Sub
+                Case Else
+                    Console.WriteLine("Unknown entry " & answer & "!")
+            End Select
+            
+            Console.Write("Press any key to continue . . . ")
+            Console.ReadKey(True)
+        Loop
     End Sub
     
     Sub ShowMenu()
+        Console.Clear
         ' Responsive header (i.e. it'll be the width of the window)
         Dim HR As String = ""
         For i = 0 To Console.WindowWidth - 2
