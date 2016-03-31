@@ -1,5 +1,8 @@
 ﻿Module Program
-    Dim urlFilePath, filenameFilePath, namePrefix, nameSuffix As String
+    Dim urlFilePath As String = ""
+    Dim filenameFilePath As String = ""
+    Dim namePrefix As String = ""
+    Dim nameSuffix As String = ""
     
     Sub Main()
         Console.Title = My.Application.Info.AssemblyName & " v" & My.Application.Info.Version.ToString
@@ -213,6 +216,33 @@
                         Console.Write("Filename prefix not changed! ")
                     End If
                     Pause
+                Case "dl"
+                    Console.WriteLine("Current Directory: " & Environment.CurrentDirectory)
+                    Console.WriteLine("Reading URLs from: " & IIf(urlFilePath = "", "STDIN", urlFilePath).ToString)
+                    Console.WriteLine("Reading filenames from: " & IIf(filenameFilePath = "", "None, using filename from server", filenameFilePath).ToString)
+                    Console.WriteLine("Using filename prefix: " & namePrefix)
+                    Console.WriteLine("Using filename suffix: " & nameSuffix)
+                    
+                    Console.Write(vbNewLine & "To continue, press Enter. Press any other key to go back.")
+                    If Console.ReadKey().Key = ConsoleKey.Enter Then
+                        Console.WriteLine
+                        
+                        Dim count As Integer = 1
+                        Dim filenames As String()
+                        If filenameFilePath <> "" Then filenames = IO.File.ReadAllLines(filenameFilePath)
+                        For Each line In IO.File.ReadAllLines(urlFilePath)
+                            If filenameFilePath = "" And namePrefix = "" And nameSuffix = "" Then
+                                Download(line)
+                            ElseIf filenameFilePath = ""
+                                Download(line, String.Format(namePrefix, count.ToString) & String.Format(nameSuffix, count.ToString))
+                            Else
+                                Download(line, String.Format(namePrefix, count.ToString) & filenames(count-1) & String.Format(nameSuffix, count.ToString))
+                            End If
+                            count += 1
+                        Next
+                        Console.Write("Download job complete! ")
+                    End If
+                    Pause
                 Case ""
                 Case "exit", "q", "d", "♦" ' apparently that's ^D
                     Exit Do
@@ -265,15 +295,15 @@
         Console.WriteLine(HR)
         
         'menu algorithm
-        Dim arrayToVisualise() As String = {"[CD] Change Current Directory" & vbTab & vbTab, "[GV] Get an Environment variable" & vbTab, "[EV] Set an Environment variable" & vbTab,
-            "[ST] Set the window title" & vbTab & vbTab, "[EC] Set the input encoding used" & vbTab, "[CR] Set cursor options" & vbTab & vbTab & vbTab,
-            "[WP] Set the window position" & vbTab & vbTab, "[WS] Set the window size" & vbTab & vbTab, "[BS] Set the buffer size" & vbTab & vbTab,
+        Dim arrayToVisualise() As String = {"[CD] Change Current Directory" & vbTab & vbTab & vbTab, "[GV] Get an Environment variable" & vbTab & vbTab, "[EV] Set an Environment variable" & vbTab & vbTab,
+            "[ST] Set the window title" & vbTab & vbTab & vbTab, "[EC] Set the input encoding used" & vbTab & vbTab, "[CR] Set cursor options" & vbTab & vbTab & vbTab & vbTab,
+            "[WP] Set the window position" & vbTab & vbTab & vbTab, "[WS] Set the window size" & vbTab & vbTab & vbTab, "[BS] Set the buffer size" & vbTab & vbTab & vbTab,
             "Download Settings:" & vbTab & vbTab & vbTab & vbTab, "[UF] Set a file to read URLs from" & vbTab & vbTab, "[NF] Set a file to read filenames from" & vbTab & vbTab,
-            "[NP] Set a name Prefix to use" & vbTab, "[NS] Set a name Suffix to use" & vbTab, "[EXIT, Q, D] Exit" & vbTab}
+            "[NP] Set a name Prefix to use" & vbTab, "[NS] Set a name Suffix to use" & vbTab, "[DL] Start Download process" & vbTab, "[EXIT, Q, D] Exit" & vbTab}
         
         Dim selections As String = ""
         Dim columns As Integer = 1
-        columns = Console.WindowWidth \ 40
+        columns = Console.WindowWidth \ 44
         If arrayToVisualise.Length Mod columns = 0 Then
             For i = 1 To arrayToVisualise.Length \ columns ' i is number of lines
                 For j = 1 To columns ' j is current column
@@ -326,9 +356,9 @@
     
     Sub Download(URL As String, Optional OutputFile As String = Nothing)
         If OutputFile <> Nothing Then
-            Shell("wget " & URL & " -O " & OutputFile, AppWinStyle.NormalNoFocus, True, -1)
+            Shell("wget """ & URL & """ -O """ & OutputFile & """", AppWinStyle.NormalNoFocus, True, -1)
         Else
-            Shell("wget " & URL, AppWinStyle.NormalNoFocus, True, -1)
+            Shell("wget """ & URL & """", AppWinStyle.NormalNoFocus, True, -1)
         End If
     End Sub
 End Module
