@@ -11,8 +11,12 @@
             Select Case answer.ToLower
                 Case "cd" ' Change Current Directory
                     Console.Write("Enter path to change to: ")
-                    Environment.CurrentDirectory = Console.ReadLine
-                    Console.Write("Current directory changed to " & Environment.CurrentDirectory & ". ")
+                    Try
+                        Environment.CurrentDirectory = Console.ReadLine
+                        Console.Write("Current directory changed to " & Environment.CurrentDirectory & ". ")
+                    Catch ex As Exception
+                        Console.Writeline(ex.ToString)
+                    End Try
                     Pause
                 Case "gv" ' Get an Environment variable
                     Console.Write("Enter environment variable to get: ")
@@ -29,16 +33,86 @@
                 Case "st" ' Set the window title
                     Console.Write("Enter new title: ")
                     Console.Title = Console.ReadLine
-                Case "ec" ' Set the encoding used
-'                    Console.Write("Enter environment variable to get: ")
-'                    answer = Console.ReadLine
-'                    Console.Write("Contents of environment variable """ & answer & """ is """ & Environment.GetEnvironmentVariable(answer) & """. Press any key to continue... ")
-'                    Console.ReadKey(True)
+                Case "ec" ' Set the input encoding used
+                    Console.WriteLine("0: Default (""The OS's current ANSI code page."")")
+                    Console.WriteLine("1: ASCII")
+                    Console.WriteLine("2: Unicode")
+                    Console.WriteLine("3: Unicode Big Endian")
+                    Console.WriteLine("4: UTF7")
+                    Console.WriteLine("5: UTF8")
+                    Console.WriteLine("6: UTC32")
+                    
+                    Console.Write("Enter a number for an encoding: ")
+                    answer = Console.ReadKey().Key.ToString
+                    Console.WriteLine
+                    Try
+                      Select Case answer
+                        Case "D0"
+                            Console.InputEncoding = Text.Encoding.Default
+                        Case "D1"
+                            Console.InputEncoding = Text.Encoding.ASCII
+                        Case "D2"
+                            Console.InputEncoding = Text.Encoding.Unicode
+                        Case "D3"
+                            Console.InputEncoding = Text.Encoding.BigEndianUnicode
+                        Case "D4"
+                            Console.InputEncoding = Text.Encoding.UTF7
+                        Case "D5"
+                            Console.InputEncoding = Text.Encoding.UTF8
+                        Case "D6"
+                            Console.InputEncoding = Text.Encoding.UTF32
+                        Case Else
+                            Console.Write("""" & answer & """ isn't a valid selection. ")
+                            Pause
+                      End Select
+                    Catch ex As Exception
+                        Console.WriteLine(ex.ToString)
+                        Pause
+                    End Try
                 Case "cr" ' Set cursor options
-'                    Console.Write("Enter environment variable to get: ")
-'                    answer = Console.ReadLine
-'                    Console.Write("Contents of environment variable """ & answer & """ is """ & Environment.GetEnvironmentVariable(answer) & """. Press any key to continue... ")
-'                    Console.ReadKey(True)
+                    Console.WriteLine("1: Set cursor top position")
+                    Console.WriteLine("2: Set cursor left position")
+                    Console.WriteLine("3: Set cursor size")
+                    Console.WriteLine("4: Toggle cursor visibility")
+                    
+                    Console.Write("Enter a number: ")
+                    answer = Console.ReadKey().Key.ToString
+                    Console.WriteLine
+                    
+                    Select Case answer
+                        Case "D1"
+                            Console.Write("Enter new cursor top position: ")
+                            answer = Console.ReadLine
+                            Try
+                                Console.CursorTop = Convert.ToInt32(answer)
+                            Catch ex As Exception
+                                Console.Writeline(ex.ToString)
+                                Pause
+                            End Try
+                        Case "D2"
+                            Console.Write("Enter new cursor left position: ")
+                            answer = Console.ReadLine
+                            Try
+                                Console.CursorLeft = Convert.ToInt32(answer)
+                            Catch ex As Exception
+                                Console.Writeline(ex.ToString)
+                                Pause
+                            End Try
+                        Case "D3"
+                            Console.Write("Enter new cursor size (percentage): ")
+                            answer = Console.ReadLine
+                            Try
+                                Console.CursorSize = Convert.ToInt32(answer)
+                            Catch ex As Exception
+                                Console.Writeline(ex.ToString)
+                                Pause
+                            End Try
+                        Case "D4"
+                            Console.CursorVisible = Not Console.CursorVisible
+                        Case Else
+                            Console.Write("""" & answer & """ isn't a valid selection. ")
+                            Pause
+                    End Select
                 Case "wp" ' Set the window position
                     Console.Write("Enter new window top position: ")
                     answer = Console.ReadLine
@@ -115,7 +189,7 @@
                     Pause
                 Case "np" ' Set a name Prefix to use
                     If namePrefix <> "" Then
-                        Console.Writeline("Currently reading from: """ & namePrefix & """.")
+                        Console.Writeline("Currently using: """ & namePrefix & """.")
                     End If
                     Console.Write("Enter text to prepend to filenames (use {0} to specify the current number file): ")
                     answer = Console.ReadLine
@@ -128,7 +202,7 @@
                     Pause
                 Case "ns" ' Set a name Suffix to use
                     If nameSuffix <> "" Then
-                        Console.Writeline("Currently reading from: """ & nameSuffix & """.")
+                        Console.Writeline("Currently using: """ & nameSuffix & """.")
                     End If
                     Console.Write("Enter text to append to filenames (use {0} to specify the current number file): ")
                     answer = Console.ReadLine
@@ -181,18 +255,18 @@
         Console.WriteLine(HR)
         
         CalcSpacingAndOutput("Startup Path: " & My.Application.Info.DirectoryPath, False)
-        CalcSpacingAndOutput("Current Directory: " & Environment.CurrentDirectory)
-        CalcSpacingAndOutput("Current Encoding: " & Console.OutputEncoding.ToString)
+        CalcSpacingAndOutput("Current Directory: " & Environment.CurrentDirectory, False)
+        CalcSpacingAndOutput("Current Input Encoding: " & Console.InputEncoding.ToString, False)
         CalcSpacingAndOutput("Window Position: top:" & Console.WindowTop & " left:" & Console.WindowLeft, False)
         CalcSpacingAndOutput("Window Size: width:" & Console.WindowWidth & " height:" & Console.WindowHeight)
         CalcSpacingAndOutput("Buffer Size: width:" & Console.BufferWidth & " height:" & Console.BufferHeight, False)
-        CalcSpacingAndOutput("Cursor: top:" & Console.CursorTop & " left:" & Console.CursorLeft & " size:" & Console.CursorSize & " visible:" & Console.CursorVisible)
+        CalcSpacingAndOutput("Cursor: top:" & Console.CursorTop & " left:" & Console.CursorLeft & " size:" & Console.CursorSize & "% visible:" & Console.CursorVisible, False)
         
         Console.WriteLine(HR)
         
         'menu algorithm
         Dim arrayToVisualise() As String = {"[CD] Change Current Directory" & vbTab & vbTab, "[GV] Get an Environment variable" & vbTab, "[EV] Set an Environment variable" & vbTab,
-            "[ST] Set the window title" & vbTab & vbTab, "[EC] Set the encoding used" & vbTab & vbTab, "[CR] Set cursor options" & vbTab & vbTab & vbTab,
+            "[ST] Set the window title" & vbTab & vbTab, "[EC] Set the input encoding used" & vbTab, "[CR] Set cursor options" & vbTab & vbTab & vbTab,
             "[WP] Set the window position" & vbTab & vbTab, "[WS] Set the window size" & vbTab & vbTab, "[BS] Set the buffer size" & vbTab & vbTab,
             "Download Settings:" & vbTab & vbTab & vbTab & vbTab, "[UF] Set a file to read URLs from" & vbTab & vbTab, "[NF] Set a file to read filenames from" & vbTab & vbTab,
             "[NP] Set a name Prefix to use" & vbTab, "[NS] Set a name Suffix to use" & vbTab, "[EXIT, Q, D] Exit" & vbTab}
