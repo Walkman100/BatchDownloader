@@ -1,4 +1,4 @@
-﻿Module Program
+Module Program
     Dim urlFilePath As String = ""
     Dim filenameFilePath As String = ""
     Dim namePrefix As String = ""
