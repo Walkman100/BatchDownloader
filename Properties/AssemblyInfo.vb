@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <assembly: AssemblyDescription("A tool to download files in batches")>
 <assembly: AssemblyCompany("WalkmanOSS")>
 <assembly: AssemblyProduct("BatchDownloader")>
-<assembly: AssemblyCopyright("FOSS from Walkman 2016")>
+<assembly: AssemblyCopyright("FOSS from Walkman 2016-21")>
 <assembly: AssemblyTrademark("")>
 
 ' This sets the default COM visibility of types in the assembly to invisible.

@@ -9,6 +9,7 @@
     <RootNamespace>BatchDownloader</RootNamespace>
     <AssemblyName>BatchDownloader</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <LangVersion>11</LangVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <OptionInfer>On</OptionInfer>
